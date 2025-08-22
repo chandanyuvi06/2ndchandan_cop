@@ -2,9 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Snowflake, Thermometer, Wind } from 'lucide-react-native';
+import { Snowflake, Thermometer, Wind, LogOut, User } from 'lucide-react-native';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function HomeScreen() {
+  const { userData, signOut } = useAuth();
+
   const handleFreezerPress = () => {
     router.push('/(freezer)');
   };
@@ -25,6 +28,17 @@ export default function HomeScreen() {
     router.push('/(blastfreezer)');
   };
 
+  const handleSignOut = async () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Sign Out', style: 'destructive', onPress: signOut }
+      ]
+    );
+  };
+
   return (
     <LinearGradient
       colors={['#EBF8FF', '#DBEAFE', '#BFDBFE']}
@@ -32,6 +46,15 @@ export default function HomeScreen() {
     >
       <View style={styles.safeArea}>
         <View style={styles.header}>
+          <View style={styles.userInfo}>
+            <View style={styles.userDetails}>
+              <User color="#1E3A8A" size={20} strokeWidth={2} />
+              <Text style={styles.userName}>Welcome, {userData?.name || 'User'}</Text>
+            </View>
+            <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
+              <LogOut color="#64748B" size={20} strokeWidth={2} />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.title}>Enzo CoolCalc</Text>
           <Text style={styles.subtitle}>Professional Refrigeration Load Calculator</Text>
         </View>
@@ -98,6 +121,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     marginBottom: 20,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 20,
+  },
+  userDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  userName: {
+    fontSize: 14,
+    color: '#1E3A8A',
+    fontWeight: '500',
+  },
+  signOutButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#F1F5F9',
   },
   title: {
     fontSize: 32,

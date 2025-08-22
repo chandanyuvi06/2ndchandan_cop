@@ -7,9 +7,10 @@ interface InputCardProps {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
+  secureTextEntry?: boolean;
 }
 
-export function InputCard({ label, unit, value, onChangeText, placeholder }: InputCardProps) {
+export function InputCard({ label, unit, value, onChangeText, placeholder, secureTextEntry }: InputCardProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
@@ -19,12 +20,16 @@ export function InputCard({ label, unit, value, onChangeText, placeholder }: Inp
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          keyboardType="numeric"
+          keyboardType={unit ? "numeric" : "default"}
           returnKeyType="done"
+          secureTextEntry={secureTextEntry}
+          autoCapitalize="none"
         />
-        <View style={styles.unitContainer}>
-          <Text style={styles.unit}>{unit}</Text>
-        </View>
+        {unit && (
+          <View style={styles.unitContainer}>
+            <Text style={styles.unit}>{unit}</Text>
+          </View>
+        )}
       </View>
     </View>
   );
